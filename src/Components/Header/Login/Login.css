@@ -1,0 +1,25 @@
+.login{
+    text-align: center;
+   
+}
+.create-id{
+    width: 350px;
+    height: 370px;
+    margin-left: 35%;
+    padding: 20px;
+    
+}
+.signin{
+    width: 350px;
+    height: 300px;
+    margin-left: 35%;
+    padding: 20px;
+    margin-top: 100px;
+}
+
+.google-logo{
+    height: 20px;
+    width: 20px;
+   
+}
+
