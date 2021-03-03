@@ -11,7 +11,7 @@ import { createMuiTheme, TextField } from '@material-ui/core';
 import { orange } from '@material-ui/core/colors';
 
 const Login = () => {
-
+  const [newUser, setNewUser] = useState(false);
   const [user, setUser] = useState({
     isSignedIn: false,
     name: '',
@@ -56,25 +56,37 @@ const Login = () => {
     }
 
 
-    const handleSignOut = () => {
-      firebase.auth().signOut()
-          .then(res => {
-              const signedOutUser = {
-                  isSignedIn: false,
-                  name: '',
-                  email: '',
-                  error: '',
-                  success: ''
+  //   const handleSignOut = () => {
+  //     firebase.auth().signOut()
+  //         .then(res => {
+  //             const signedOutUser = {
+  //                 isSignedIn: false,
+  //                 name: '',
+  //                 email: '',
+  //                 error: '',
+  //                 success: ''
 
-              }
-              setUser(signedOutUser);
-          })
-          .catch(error => {
+  //             }
+  //             setUser(signedOutUser);
+  //         })
+  //         .catch(error => {
 
 
-          })
+  //         })
 
-  }
+  // }
+  const updateUserName = name => {
+    const user = firebase.auth().currentUser;
+    user.updateProfile({
+        displayName: name
+    }).then(function () {
+        console.log('user name updated successfully')
+    }).catch(function (error) {
+        console.log(error)
+    });
+}
+
+
 const handleSubmit =(e) =>{
   if (newUser && user.email && user.password) {
     firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
@@ -96,7 +108,7 @@ const handleSubmit =(e) =>{
         });
 
 }
-if (!newUser && user.email && user.password) {
+if (!newUser &&user.name && user.email && user.password) {
   firebase.auth().signInWithEmailAndPassword(user.email, user.password)
       .then(res => {
           const newUserInfo = { ...user };
@@ -157,7 +169,7 @@ e.preventDefault();
       <Card className="create-id">
            
            <h2>Create An Account</h2>
-       <form onSubmit={handleSubmit}>
+       <form onSubmit={handleSubmit} >
               
        <ThemeProvider theme={theme}>
         <TextField
@@ -176,7 +188,7 @@ e.preventDefault();
          </ThemeProvider>
          <br/>
 
-         <input style={{backgroundColor:"orange", marginTop:"15px", border:"5px", width:"300px"}} type="submit" value="Create an Account"/>
+        <input style= {{backgroundColor:"orange", marginTop:"15px", border:"5px", width:"300px"}} type="submit" value="Create an Account"/>
              
        </form>
               <br/>
@@ -190,9 +202,10 @@ e.preventDefault();
                       { user.success && <p style={{ color: 'green' }}>Account {newUser ? 'created' : 'Logged In'} Successfully</p>}
 
                        <h4> Or </h4>
-                       <button style={{width:"350px", borderRadius:"30px"}}onClick={handleGoogleSignIn}>
+                      <button style={{width:"350px", borderRadius:"30px"}}onClick={handleGoogleSignIn}>
                          
                          <img className="google-logo" src={google} alt=""/> Continue with Google</button>
+
 </div>   
     );
 };

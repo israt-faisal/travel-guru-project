@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { FormControl, InputGroup } from 'react-bootstrap';
 import { Link} from 'react-router-dom';
 import logo from '../../../Icon/Logo.png';
@@ -11,34 +11,39 @@ import locations from '../../../FakeData/FakeData';
 
 
 
+
 import DateFnsUtils from '@date-io/date-fns';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
-import { Box } from '@material-ui/core';
+
+import { UserContext } from '../../../App';
+
 
 const BookingDetail=()=>{
-   const bookingDetail = locations;
+   const { bookingInfo, setBookingInfo } = useContext(UserContext);
 
-    let placeName = '';
-    for (let i = 0; i < bookingDetail.length; i++) {
-        const location = bookingDetail[i];
-        placeName = location.name;
-    }
-    let bookingButton = '';
-    for (let i = 0; i < bookingDetail.length; i++) {
-        const location = bookingDetail[i];
-        bookingButton = <Link to={"/booking"}>
-            <button style={{backgroundColor:"orange",marginTop:"3px",borderRadius:"5px", border:"solid gray 1px", width:"380px", height:"50px"}}> 
-            Start Booking</button></Link>;
-       
-    }
+
    
+       
+    
+
+    const [booking, setBooking] = useState({
+        location: {},
+        origin: '',
+        destination: ''
+      });
+
+    const onChangeHandler = e => {
+        setBooking(previousState => ({ ...previousState, [e.target.name]: e.target.value }))
+        e.persist()
+      }
+     
     
 
 
-    const [selectedDate1, setSelectedDate1] = React.useState(new Date('2020-01-01'));
+    const [selectedDate1, setSelectedDate1] = React.useState(new Date('2021-01-01'));
     const [selectedDate2, setSelectedDate2] = React.useState(new Date('2021-01-31'));
 
     const handleDateChange1 = (date1) => {
@@ -48,6 +53,9 @@ const BookingDetail=()=>{
         setSelectedDate2(date2);
     };
   
+    const submitHandler =() =>{
+console.log('submitted form')
+    }
 
 
 
@@ -94,27 +102,31 @@ const BookingDetail=()=>{
 </nav>
 <br/> 
 <br/>
+<Card style={{width:"400px", height:"320px", float:"right", marginRight:"100px", padding:"10px"}}>
+    <Card.Body>
+<form onSubmit={submitHandler}>      
+<h5>Origin</h5>
+<input value={booking.origin} onChange={onChangeHandler} name="origin" label="Origin" placeholder="Origin"  />
+<h5>Destination</h5>
 
-<Card style={{width:"400px", height:"320px", float:"right", marginRight:"100px", padding:"10px"}}>      
-<Box>Origin </Box>
-   <Card.Header>Dhaka</Card.Header>
-   <Box>Destination</Box>
-   <h5>{placeName}</h5>
+<input value = {booking.destination} onChange={onChangeHandler} name="destination" label ="destination" placeholder="Destination" />
 
 
-<Box>Date</Box>
+<h5>Date</h5>
     <div style={{display:"flex", marginInline:"30px"}}>
     
    
 
       
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <Card.Header style={{width:"150px", height:"80px", borderRight:"solid white 5px"}}>
-        <KeyboardDatePicker
+
+        <div style={{width:"150px", height:"80px", borderRight:"solid white 5px"}}>
+
+       <KeyboardDatePicker
+
           margin="normal"
           id="from"
          label="From"
-    
           format="MM/dd"
           value={selectedDate1}
           onChange={handleDateChange1}
@@ -122,13 +134,14 @@ const BookingDetail=()=>{
             'aria-label': 'change date',
           }}
         />
+        </div>
 
-        </Card.Header>
+       
 
-        <Card.Header style={{width:"150px", height:"80px",borderLeft:"solid white 5px"}}>
+        <div  style={{width:"150px", height:"80px",borderLeft:"solid white 5px"}}>
 
-            
-        <KeyboardDatePicker
+<KeyboardDatePicker 
+        
           margin="normal"
           id="to"
           label="To"
@@ -139,14 +152,19 @@ const BookingDetail=()=>{
             'aria-label': 'change date',
           }}
         />
-       </Card.Header>
-     
-    </MuiPickersUtilsProvider>
+        </div>
+        
+      </MuiPickersUtilsProvider>
+      </div>
+
+   <Link to="/login"><input style={{backgroundColor:"orange",marginTop:"10px", border:"5px",height:"30px", width:"300px"}} type="submit" value="Start Booking" /></Link> 
     
-    </div>
-   {bookingButton}
     
+    </form>
+    </Card.Body>     
     </Card>
+    
+    
 
 
         </div>

@@ -1,36 +1,30 @@
 
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { UserContext } from '../../App';
 
-import fakeData from '../../FakeData/FakeData';
-// import HotelDetail from './HotelDetail';
+import locations from '../../FakeData/FakeData';
+import HotelDetail from './HotelDetail';
 
 
 const Booking = () => {
 
-    const booking = fakeData;
+const {id} = useParams();
+  const { bookingInfo } = useContext(UserContext);
+  const [hotels, setHotels] = useState([]);
+  useEffect(() => {
+    const bookingLocation = locations.find(location => location.id.toString() === id)
+    setHotels(previousState => ([...previousState, ...bookingLocation.hotels]))
+  }, [id])
     
-
-  
-   
-    const [bookings, setBookings] = useState([booking]);
-
-
-    // let hotel = '';
-    // for (let i = 0; i < hotelBooking.length; i++){
-    //     const location = hotelBooking[i];
-    //     hotel = location.hotels;
-    // }
     return (
         <div>
           
-             {/* {
-                 bookings.find(book => <HotelDetail
-                 key={book.hotels}
-                 hotelDetail={book.hotels}>
-                 </HotelDetail>
+            {
+                hotels.map(hotel => <HotelDetail key={hotel.id}
+                hotel={hotel} ></HotelDetail>)
 
-                 )
-                 } */}
+            }
         </div>
     );
   
